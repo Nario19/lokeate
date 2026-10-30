@@ -8,11 +8,18 @@
 
 ## 1. Estado Actual del Proyecto
 
-- **Fase Actual:** Fase 0 — Configuración, Corrección Focalizada y Blindaje de Documentación Maestra.
-- **Sprint Activo:** `Sprint 00` (Auditoría técnica de especificaciones, eliminación de contradicciones y preparación documental).
-- **Código Existente en Repositorio:** Ninguno (directorio verificado; inicialización limpia).
-- **Estado de Base de Datos:** Modelo relacional integral documentado en [`DATABASE.md`](./DATABASE.md); ninguna migración ejecutada aún.
-- **Próximo Hito:** Aprobación del usuario para iniciar el `Sprint 01: Arquitectura y Configuración Inicial`.
+- **Fase Actual:** Fase 1 — Cimientos del Repositorio y Arquitectura Base.
+- **Sprint Activo:** `Sprint 01: Arquitectura y Configuración Inicial` (**COMPLETADO Y VERIFICADO**).
+- **Código Existente en Repositorio:**
+  - Next.js 15.1.6 (App Router), React 19, TypeScript estricto (`strict: true`, `noImplicitAny: true`, `strictNullChecks: true`).
+  - Tailwind CSS con tokens de diseño shadcn/ui y soporte de Lucide Icons.
+  - Clientes de Supabase desacoplados (`client.ts`, `server.ts`, `middleware.ts`).
+  - Configuración local de Supabase (`supabase/config.toml`, `supabase/seed.sql` con ubigeos de Lima y zonas de lanzamiento).
+  - Estructura modular por dominios en `src/modules/` (`auth`, `establishments`, `spaces`, `search`, `pricing`, `calendar`, `reservations`, `payments`, `inventory`, `acts`, `reviews`, `admin`).
+  - Suite de pruebas unitarias/integración con Vitest y Testing Library.
+  - Suite de pruebas End-to-End con Playwright (Chromium/Mobile).
+- **Estado de Base de Datos:** Configuración local inicial preparada; esquema documentado en [`DATABASE.md`](./DATABASE.md).
+- **Próximo Hito:** Aprobación del usuario para iniciar el `Sprint 02: Autenticación, Perfiles Segregados y RLS No Recursivo`.
 
 ---
 
@@ -150,9 +157,17 @@
 | Sprint | Nombre | Estado | Fecha Inicio | Fecha Cierre |
 |---|---|---|---|---|
 | `Sprint 00` | Configuración, Corrección y Blindaje Documental | **COMPLETADO / AUDITADO** | 2026-10-30 | 2026-10-30 |
-| `Sprint 01` | Arquitectura y Configuración Inicial | *Pendiente de autorización* | — | — |
-| `Sprint 02` | Autenticación y Seguridad | *No iniciado* | — | — |
+| `Sprint 01` | Arquitectura y Configuración Inicial | **COMPLETADO / VERIFICADO** | 2026-10-30 | 2026-10-30 |
+| `Sprint 02` | Autenticación, Perfiles Segregados y RLS No Recursivo | *Pendiente de autorización* | — | — |
 | ... | Sprints 03 al 20 | *No iniciados* | — | — |
+
+### Evidencia de Cierre de Sprint 01 (DoD Verificado):
+- **Typecheck:** `npm run typecheck` (`tsc --noEmit`) -> 0 errores.
+- **Linter:** `npm run lint` (`next lint`) -> 0 advertencias, 0 errores.
+- **Pruebas Unitarias:** `npm run test` (`vitest run`) -> 100% pasando (2/2 pruebas de cálculo RealPrice y formateador PEN).
+- **Compilación de Producción:** `npm run build` (`next build`) -> exitoso (rutas estáticas y middleware optimizado).
+- **Pruebas End-to-End:** `npm run test:e2e` (`playwright test`) -> 100% pasando (2/2 pruebas en Chromium y Mobile).
+- **Modularidad:** Carpetas creadas bajo `src/modules/{domain}/` y componentes shadcn/ui base.
 
 ---
 
