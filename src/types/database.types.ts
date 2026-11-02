@@ -209,7 +209,9 @@ export interface Database {
           description: string;
           establishment_type: EstablishmentType;
           ubigeo_code: string;
-          approximate_location: unknown;
+          approximate_latitude: number;
+          approximate_longitude: number;
+          approximate_location?: unknown;
           noise_curfew_time: string | null;
           house_rules: string | null;
           publishing_status: PublishingStatus;
@@ -226,7 +228,9 @@ export interface Database {
           description: string;
           establishment_type: EstablishmentType;
           ubigeo_code: string;
-          approximate_location: unknown;
+          approximate_latitude: number;
+          approximate_longitude: number;
+          approximate_location?: unknown;
           noise_curfew_time?: string | null;
           house_rules?: string | null;
           publishing_status?: PublishingStatus;
@@ -243,6 +247,8 @@ export interface Database {
           description?: string;
           establishment_type?: EstablishmentType;
           ubigeo_code?: string;
+          approximate_latitude?: number;
+          approximate_longitude?: number;
           approximate_location?: unknown;
           noise_curfew_time?: string | null;
           house_rules?: string | null;
