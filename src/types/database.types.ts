@@ -416,6 +416,81 @@ export interface Database {
         };
         Relationships: [];
       };
+      space_photos: {
+        Row: {
+          id: string;
+          space_id: string;
+          storage_path: string;
+          caption: string | null;
+          display_order: number;
+          is_cover: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          space_id: string;
+          storage_path: string;
+          caption?: string | null;
+          display_order?: number;
+          is_cover?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          space_id?: string;
+          storage_path?: string;
+          caption?: string | null;
+          display_order?: number;
+          is_cover?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      shared_resources: {
+        Row: {
+          id: string;
+          establishment_id: string;
+          name: string;
+          resource_type: string;
+          capacity: number | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          establishment_id: string;
+          name: string;
+          resource_type: string;
+          capacity?: number | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          establishment_id?: string;
+          name?: string;
+          resource_type?: string;
+          capacity?: number | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      space_shared_resources: {
+        Row: {
+          space_id: string;
+          shared_resource_id: string;
+          is_exclusive_during_event: boolean;
+        };
+        Insert: {
+          space_id: string;
+          shared_resource_id: string;
+          is_exclusive_during_event?: boolean;
+        };
+        Update: {
+          space_id?: string;
+          shared_resource_id?: string;
+          is_exclusive_during_event?: boolean;
+        };
+        Relationships: [];
+      };
       reservations: {
         Row: {
           id: string;

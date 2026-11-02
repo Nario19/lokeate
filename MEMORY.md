@@ -9,7 +9,7 @@
 ## 1. Estado Actual del Proyecto
 
 - **Fase Actual:** Fase 2 — Catálogo Territorial y Gestión de Establecimientos.
-- **Sprint Activo:** `Sprint 03: Catálogo Territorial, Moderación de Establecimientos y Ubicación Segregada` (**COMPLETADO Y VERIFICADO**).
+- **Sprint Activo:** `Sprint 04: Espacios Individuales, Planes Tarifarios y Galería Multimedia` (**COMPLETADO Y VERIFICADO**).
 - **Código Existente en Repositorio:**
   - Next.js 15.1.6 (App Router), React 19, TypeScript estricto (`strict: true`, `noImplicitAny: true`, `strictNullChecks: true`).
   - Tailwind CSS con tokens de diseño shadcn/ui y soporte de Lucide Icons.
@@ -18,12 +18,14 @@
   - Migraciones SQL versionadas:
     - `supabase/migrations/20261101120000_auth_profiles_and_security.sql`.
     - `supabase/migrations/20261102000000_establishments_moderation_and_locations.sql`.
+    - `supabase/migrations/20261103000000_spaces_plans_and_media.sql`.
   - Módulo `src/modules/auth` completo (registro con DNI/RUC/CE, login, reset-password, dashboard protegido, role switcher).
   - Módulo `src/modules/establishments` completo: catálogo de zonas de lanzamiento, `EstablishmentService`, Server Actions (`createEstablishmentAction`, `submitForReviewAction`, `moderateEstablishmentAction`), componentes UI (`CreateEstablishmentForm`, `EstablishmentCard`, `EstablishmentStatusBadge`) y rutas App Router (`/explorar`, `/host/establishments`, `/host/establishments/new`).
-  - Suite de pruebas unitarias/integración con Vitest (50 pruebas pasando en 7 suites).
-  - Suite de pruebas End-to-End con Playwright (12 pruebas pasando en Desktop y Mobile Chrome).
-- **Estado de Base de Datos:** Migraciones de Auth, Establecimientos y Ubicación Segregada preparadas; esquema documentado en [`DATABASE.md`](./DATABASE.md).
-- **Próximo Hito:** Aprobación del usuario para iniciar el `Sprint 04: Espacios Individuales, Planes Tarifarios y Galería Multimedia`.
+  - Módulo `src/modules/spaces` completo: gestión de áreas y aforos, buffers de preparación, soporte de modalidades tarifarias alternativas (`HOURLY`, `FIXED_EVENT`, `PER_PERSON`, `PACKAGE`), galería multimedia (`space_photos`), Server Actions (`createSpaceAction`, `createPricingPlanAction`), componentes UI (`CreateSpaceForm`, `CreatePricingPlanForm`, `SpacePricingPlanCard`) y rutas App Router (`/host/establishments/[id]`, `/host/establishments/[id]/spaces/new`, `/host/spaces/[id]/plans/new`).
+  - Suite de pruebas unitarias/integración con Vitest (82 pruebas pasando en 10 suites).
+  - Suite de pruebas End-to-End con Playwright (20 pruebas pasando en Desktop y Mobile Chrome).
+- **Estado de Base de Datos:** Migraciones de Auth, Establecimientos, Ubicación Segregada, Espacios y Planes Tarifarios preparadas; esquema documentado en [`DATABASE.md`](./DATABASE.md).
+- **Próximo Hito:** Aprobación del usuario para iniciar el `Sprint 05: Marketplace, Búsqueda Avanzada y Mapa Referencial`.
 
 ---
 
@@ -164,8 +166,9 @@
 | `Sprint 01` | Arquitectura y Configuración Inicial | **COMPLETADO / VERIFICADO** | 2026-10-30 | 2026-10-30 |
 | `Sprint 02` | Autenticación, Perfiles Segregados y RLS No Recursivo | **COMPLETADO / VERIFICADO** | 2026-11-01 | 2026-11-01 |
 | `Sprint 03` | Catálogo Territorial, Moderación de Establecimientos y Ubicación Segregada | **COMPLETADO / VERIFICADO** | 2026-11-01 | 2026-11-01 |
-| `Sprint 04` | Espacios Individuales, Planes Tarifarios y Galería Multimedia | *Pendiente de autorización* | — | — |
-| ... | Sprints 05 al 20 | *No iniciados* | — | — |
+| `Sprint 04` | Espacios Individuales, Planes Tarifarios y Galería Multimedia | **COMPLETADO / VERIFICADO** | 2026-11-01 | 2026-11-01 |
+| `Sprint 05` | Marketplace, Búsqueda Avanzada y Mapa Referencial | *Pendiente de autorización* | — | — |
+| ... | Sprints 06 al 20 | *No iniciados* | — | — |
 
 ### Evidencia de Cierre de Sprint 01 (DoD Verificado):
 - **Typecheck:** `npm run typecheck` (`tsc --noEmit`) -> 0 errores.
@@ -200,6 +203,21 @@
 - **Pruebas Unitarias y de Integración:** `npm run test` (`vitest run`) -> 100% pasando (50/50 pruebas en 7 suites).
 - **Compilación de Producción:** `npm run build` (`next build`) -> exitoso (11 rutas generadas, estáticas y dinámicas).
 - **Pruebas End-to-End:** `npm run test:e2e` (`playwright test`) -> 100% pasando (12/12 pruebas en Desktop Chrome y Mobile Chrome).
+
+### Evidencia de Cierre de Sprint 04 (DoD Verificado):
+- **Migración SQL Versionada:** `supabase/migrations/20261103000000_spaces_plans_and_media.sql`.
+  - Tabla `public.spaces`: soporte de aforos de pie y sentados, área en m², tiempos de preparación y desmontaje (`setup_buffer_minutes`, `cleanup_buffer_minutes`), política de cancelación por defecto y flag `is_entire_establishment`.
+  - Tabla `public.space_pricing_plans`: soporte de modalidades tarifarias alternativas (`HOURLY`, `FIXED_EVENT`, `PER_PERSON`, `PACKAGE`), tarifas diferenciales entre semana y fin de semana (`base_price_weekday`, `base_price_weekend`), horas mínimas de alquiler, tarifa de limpieza, depósito de garantía, porcentaje de anticipo requerido y condición tributaria.
+  - Tablas auxiliares: `public.space_photos` (galería con orden de visualización y portada) y `public.shared_resources` / `public.space_shared_resources` (recursos compartidos exclusivos para control de colisiones).
+  - Políticas RLS: lectura pública de espacios y planes de establecimientos activos; mutación restringida estrictamente al anfitrión titular mediante subconsultas de pertenencia relacional.
+- **Typecheck:** `npm run typecheck` (`tsc --noEmit`) -> 0 errores (estricto, sin `any`).
+- **Linter:** `npm run lint` (`next lint`) -> 0 advertencias, 0 errores.
+- **Pruebas Unitarias y de Integración:** `npm run test` (`vitest run`) -> 100% pasando (82/82 pruebas en 10 suites).
+  - `src/modules/spaces/__tests__/space-schemas.test.ts` (19 pruebas de validación Zod).
+  - `src/modules/spaces/__tests__/space-multi-plan.test.ts` (4 pruebas de invariantes de negocio: planes alternativos no sumados, tarifas diferenciadas y establecimiento completo).
+  - `src/modules/spaces/__tests__/space-service.test.ts` (9 pruebas unitarias de servicio con aislamiento de permisos).
+- **Compilación de Producción:** `npm run build` (`next build`) -> exitoso (rutas `/host/establishments/[id]`, `/host/establishments/[id]/spaces/new`, `/host/spaces/[id]/plans/new` optimizadas).
+- **Pruebas End-to-End:** `npm run test:e2e` (`playwright test`) -> 100% pasando (20/20 pruebas en Chromium y Mobile Chrome).
 
 ---
 
