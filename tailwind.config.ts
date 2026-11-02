@@ -17,7 +17,19 @@ const config: Config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["'DM Sans'", "-apple-system", "BlinkMacSystemFont", "'Segoe UI'", "Roboto", "sans-serif"],
+        heading: ["'Manrope'", "-apple-system", "BlinkMacSystemFont", "'Segoe UI'", "sans-serif"],
+      },
       colors: {
+        brand: {
+          coral: "#e35b44",
+          forest: "#24362d",
+          ink: "#20231f",
+          soft: "#f6f7f4",
+          line: "#e9ebe7",
+          muted: "#7d817c",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
