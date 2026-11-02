@@ -8,18 +8,19 @@
 
 ## 1. Estado Actual del Proyecto
 
-- **Fase Actual:** Fase 1 — Cimientos del Repositorio y Arquitectura Base.
-- **Sprint Activo:** `Sprint 01: Arquitectura y Configuración Inicial` (**COMPLETADO Y VERIFICADO**).
+- **Fase Actual:** Fase 1 — Cimientos del Repositorio y Autenticación Segura.
+- **Sprint Activo:** `Sprint 02: Autenticación, Perfiles Segregados y RLS No Recursivo` (**COMPLETADO Y VERIFICADO**).
 - **Código Existente en Repositorio:**
   - Next.js 15.1.6 (App Router), React 19, TypeScript estricto (`strict: true`, `noImplicitAny: true`, `strictNullChecks: true`).
   - Tailwind CSS con tokens de diseño shadcn/ui y soporte de Lucide Icons.
   - Clientes de Supabase desacoplados (`client.ts`, `server.ts`, `middleware.ts`).
   - Configuración local de Supabase (`supabase/config.toml`, `supabase/seed.sql` con ubigeos de Lima y zonas de lanzamiento).
-  - Estructura modular por dominios en `src/modules/` (`auth`, `establishments`, `spaces`, `search`, `pricing`, `calendar`, `reservations`, `payments`, `inventory`, `acts`, `reviews`, `admin`).
-  - Suite de pruebas unitarias/integración con Vitest y Testing Library.
-  - Suite de pruebas End-to-End con Playwright (Chromium/Mobile).
-- **Estado de Base de Datos:** Configuración local inicial preparada; esquema documentado en [`DATABASE.md`](./DATABASE.md).
-- **Próximo Hito:** Aprobación del usuario para iniciar el `Sprint 02: Autenticación, Perfiles Segregados y RLS No Recursivo`.
+  - Migración SQL versionada: `supabase/migrations/20261101120000_auth_profiles_and_security.sql`.
+  - Módulo `src/modules/auth` completo: esquemas Zod (validación de DNI peruano, RUC, CE, pasaporte, teléfono móvil y contraseñas seguras), `AuthService`, Server Actions (`registerUserAction`, `loginUserAction`, `logoutUserAction`, `requestPasswordResetAction`), componentes UI (`LoginForm`, `RegisterForm`, `ResetPasswordForm`, `RoleSwitcher`) y rutas App Router (`/auth/login`, `/auth/register`, `/auth/reset-password`, `/dashboard`).
+  - Suite de pruebas unitarias/integración con Vitest (29 pruebas pasando).
+  - Suite de pruebas End-to-End con Playwright (8 pruebas pasando).
+- **Estado de Base de Datos:** Migración de Auth y seguridad preparada; esquema documentado en [`DATABASE.md`](./DATABASE.md).
+- **Próximo Hito:** Aprobación del usuario para iniciar el `Sprint 03: Catálogo Territorial, Moderación de Establecimientos y Ubicación Segregada`.
 
 ---
 
@@ -158,8 +159,9 @@
 |---|---|---|---|---|
 | `Sprint 00` | Configuración, Corrección y Blindaje Documental | **COMPLETADO / AUDITADO** | 2026-10-30 | 2026-10-30 |
 | `Sprint 01` | Arquitectura y Configuración Inicial | **COMPLETADO / VERIFICADO** | 2026-10-30 | 2026-10-30 |
-| `Sprint 02` | Autenticación, Perfiles Segregados y RLS No Recursivo | *Pendiente de autorización* | — | — |
-| ... | Sprints 03 al 20 | *No iniciados* | — | — |
+| `Sprint 02` | Autenticación, Perfiles Segregados y RLS No Recursivo | **COMPLETADO / VERIFICADO** | 2026-11-01 | 2026-11-01 |
+| `Sprint 03` | Catálogo Territorial, Moderación de Establecimientos y Ubicación Segregada | *Pendiente de autorización* | — | — |
+| ... | Sprints 04 al 20 | *No iniciados* | — | — |
 
 ### Evidencia de Cierre de Sprint 01 (DoD Verificado):
 - **Typecheck:** `npm run typecheck` (`tsc --noEmit`) -> 0 errores.
@@ -168,6 +170,19 @@
 - **Compilación de Producción:** `npm run build` (`next build`) -> exitoso (rutas estáticas y middleware optimizado).
 - **Pruebas End-to-End:** `npm run test:e2e` (`playwright test`) -> 100% pasando (2/2 pruebas en Chromium y Mobile).
 - **Modularidad:** Carpetas creadas bajo `src/modules/{domain}/` y componentes shadcn/ui base.
+
+### Evidencia de Cierre de Sprint 02 (DoD Verificado):
+- **Migración SQL Versionada:** `supabase/migrations/20261101120000_auth_profiles_and_security.sql`.
+  - Función no recursiva `public.is_superadmin()` con `SECURITY DEFINER` y `SET search_path = public, pg_temp`.
+  - Tablas `public.profiles` e `public.profile_private_details` (aislamiento confidencial de DNI y teléfono según Ley N° 29733).
+  - Trigger `protect_profile_fields` que bloquea elevación de rol a `SUPERADMIN` (código 42501) y autoactivación como anfitrión.
+  - Trigger `handle_new_user` para aprovisionamiento atómico tras registro en `auth.users`.
+  - Políticas RLS no permisivas aplicadas a ambas tablas.
+- **Typecheck:** `npm run typecheck` (`tsc --noEmit`) -> 0 errores (modo estricto, sin `any`).
+- **Linter:** `npm run lint` (`next lint`) -> 0 advertencias, 0 errores.
+- **Pruebas Unitarias y de Integración:** `npm run test` (`vitest run`) -> 100% pasando (29/29 pruebas en 4 suites: schemas, security invariants, service y pricing smoke).
+- **Compilación de Producción:** `npm run build` (`next build`) -> exitoso (rutas estáticas generadas para `/`, `/auth/*` y ruta dinámica para `/dashboard`).
+- **Pruebas End-to-End:** `npm run test:e2e` (`playwright test`) -> 100% pasando (8/8 pruebas en Chromium y Mobile verificando login, validación cliente de DNI peruano y reset password).
 
 ---
 

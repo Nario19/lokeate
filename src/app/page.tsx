@@ -11,7 +11,7 @@ export default function HomePage() {
             <span className="text-2xl font-black tracking-tight text-primary">LOKEATE</span>
             <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary font-semibold">BETA</span>
           </div>
-          <nav className="flex items-center gap-4">
+          <nav className="flex items-center gap-3">
             <Link
               href="/explorar"
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -20,9 +20,15 @@ export default function HomePage() {
             </Link>
             <Link
               href="/auth/login"
-              className="text-sm font-medium px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+              className="text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors px-3 py-1.5"
             >
               Ingresar
+            </Link>
+            <Link
+              href="/auth/register"
+              className="text-sm font-medium px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm"
+            >
+              Crear Cuenta
             </Link>
           </nav>
         </div>

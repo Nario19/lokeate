@@ -93,6 +93,7 @@ export interface Database {
           code?: string;
           name?: string;
         };
+        Relationships: [];
       };
       provinces: {
         Row: {
@@ -110,6 +111,7 @@ export interface Database {
           department_code?: string;
           name?: string;
         };
+        Relationships: [];
       };
       districts: {
         Row: {
@@ -133,6 +135,7 @@ export interface Database {
           is_launch_zone?: boolean;
           launch_phase?: string;
         };
+        Relationships: [];
       };
       profiles: {
         Row: {
@@ -165,6 +168,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       profile_private_details: {
         Row: {
@@ -194,6 +198,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       establishments: {
         Row: {
@@ -247,6 +252,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       establishment_locations_private: {
         Row: {
@@ -285,6 +291,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       spaces: {
         Row: {
@@ -335,6 +342,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       space_pricing_plans: {
         Row: {
@@ -400,6 +408,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       reservations: {
         Row: {
@@ -495,6 +504,7 @@ export interface Database {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       reservation_snapshots: {
         Row: {
@@ -552,7 +562,37 @@ export interface Database {
           created_at?: string;
         };
         Update: never; // Inmutable: Append-only
+        Relationships: [];
       };
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      is_superadmin: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
+    };
+    Enums: {
+      user_role_enum: UserRole;
+      document_type_enum: DocumentType;
+      verification_status_enum: VerificationStatus;
+      establishment_type_enum: EstablishmentType;
+      publishing_status_enum: PublishingStatus;
+      pricing_mode_enum: PricingMode;
+      tax_condition_enum: TaxCondition;
+      event_type_enum: EventType;
+      reservation_status_enum: ReservationStatus;
+      dispute_status_enum: DisputeStatus;
+      block_type_enum: BlockType;
+      installment_status_enum: InstallmentStatus;
+      payment_method_enum: PaymentMethod;
+      payment_status_enum: PaymentStatus;
+      cancellation_policy_enum: CancellationPolicy;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
     };
   };
 }
