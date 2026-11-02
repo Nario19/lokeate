@@ -4,6 +4,7 @@ import Link from "next/link";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { EstablishmentService } from "@/modules/establishments/services/establishment.service";
 import { CreateEstablishmentForm } from "@/modules/establishments/components/create-establishment-form";
+import { BrandLogo } from "@/components/lokeate-ui";
 import { ArrowLeft, Building2 } from "lucide-react";
 
 export const metadata = {
@@ -24,7 +25,6 @@ export default async function NewEstablishmentPage() {
   // Cargar distritos autorizados en la zona de lanzamiento
   let districts = await EstablishmentService.getLaunchDistricts(supabase);
 
-  // Si la base de datos local aún no tiene sembradas las zonas de lanzamiento, proveer distritos por defecto
   if (!districts || districts.length === 0) {
     districts = [
       {
@@ -49,16 +49,16 @@ export default async function NewEstablishmentPage() {
         launch_phase: "PHASE_BETA_LIMA",
       },
       {
-        ubigeo_code: "150140",
+        ubigeo_code: "150104",
         province_code: "1501",
-        name: "Santiago de Surco",
+        name: "Barranco",
         is_launch_zone: true,
         launch_phase: "PHASE_BETA_LIMA",
       },
       {
-        ubigeo_code: "150101",
+        ubigeo_code: "150131",
         province_code: "1501",
-        name: "Lima (Cercado)",
+        name: "San Isidro",
         is_launch_zone: true,
         launch_phase: "PHASE_BETA_LIMA",
       },
@@ -66,34 +66,42 @@ export default async function NewEstablishmentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-6">
-        <div className="flex items-center justify-between">
+    <div className="min-h-screen bg-[#fafaf9] flex flex-col justify-between">
+      {/* Header Fijo */}
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-[#e9ebe7]">
+        <div className="max-w-[1530px] mx-auto px-4 sm:px-9 h-[72px] flex items-center justify-between">
+          <BrandLogo />
+
           <Link
             href="/host/establishments"
-            className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-indigo-600"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-700 hover:text-[#e35b44] hover:bg-slate-100 transition-colors"
           >
-            <ArrowLeft className="w-4 h-4 mr-1.5" />
-            Volver a Mis Locales
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Volver a Mis Establecimientos</span>
           </Link>
-
-          <div className="flex items-center gap-2 text-xs text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full font-medium">
-            <Building2 className="w-3.5 h-3.5" />
-            <span>Portal Anfitriones LOKEATE</span>
-          </div>
         </div>
+      </header>
 
+      {/* Main Content */}
+      <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-8 space-y-6">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">
+          <span className="text-[10px] uppercase font-extrabold tracking-widest text-[#e35b44]">
+            ALTA DE PROPIEDAD
+          </span>
+          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-[#20231f] mt-1">
             Registrar Nuevo Establecimiento
           </h1>
-          <p className="text-sm text-slate-600 mt-1">
-            Define tu local con georreferenciación referencial y resguardo físico de dirección exacta conforme a Ley.
+          <p className="text-xs text-[#7d817c] mt-0.5">
+            Publica tu local en la plataforma. Tu dirección exacta estará segregada y protegida por la Ley N° 29733.
           </p>
         </div>
 
         <CreateEstablishmentForm districts={districts} />
-      </div>
+      </main>
+
+      <footer className="border-t border-[#e9ebe7] py-6 px-4 sm:px-9 bg-white text-xs text-[#8a8e88] text-center">
+        © 2026 LOKEATE · Todos los derechos reservados.
+      </footer>
     </div>
   );
 }

@@ -7,17 +7,21 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginInput } from "../schemas/auth.schemas";
 import { loginUserAction } from "../actions/login.action";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
+import {
+  LokeateCard,
+  LokeateCardHeader,
+  LokeateCardContent,
+  LokeateInput,
+  LokeateButton,
+  LokeateNotice,
+} from "@/components/lokeate-ui";
+import { ArrowRight } from "lucide-react";
 
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const isRegistered = searchParams.get("registered") === "true";
-  const nextUrl = searchParams.get("next") || "/dashboard";
+  const isRegistered = searchParams?.get("registered") === "true";
+  const nextUrl = searchParams?.get("next") || "/dashboard";
 
   const [serverError, setServerError] = React.useState<string | null>(null);
   const [isPending, startTransition] = React.useTransition();
@@ -49,87 +53,87 @@ export function LoginForm() {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-md border-slate-200">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center text-slate-900">
+    <LokeateCard className="max-w-md mx-auto">
+      <LokeateCardHeader className="text-center space-y-1">
+        <h3 className="tracking-tight text-2xl font-bold text-slate-900 font-heading">
           Iniciar Sesión
-        </CardTitle>
-        <CardDescription className="text-center text-slate-600">
+        </h3>
+        <p className="text-xs text-[#7d817c]">
           Accede a tu panel de LOKEATE para gestionar tus reservas o locales.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        </p>
+      </LokeateCardHeader>
+
+      <LokeateCardContent className="space-y-4">
         {isRegistered && (
-          <div className="mb-4 flex items-center gap-2 p-3 text-sm text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg">
-            <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
-            <span>Cuenta creada exitosamente. Ingresa tus credenciales para acceder.</span>
-          </div>
+          <LokeateNotice type="success" title="¡Registro exitoso!">
+            Tu cuenta ha sido creada. Ingresa tus credenciales para acceder.
+          </LokeateNotice>
         )}
 
         {serverError && (
-          <div className="mb-4 flex items-center gap-2 p-3 text-sm text-red-800 bg-red-50 border border-red-200 rounded-lg">
-            <AlertCircle className="w-5 h-5 flex-shrink-0" />
-            <span>{serverError}</span>
-          </div>
+          <LokeateNotice type="error" title="Error de acceso">
+            {serverError}
+          </LokeateNotice>
         )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-1.5">
-            <Label htmlFor="email">Correo Electrónico</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="tu@correo.com"
-              {...register("email")}
-              disabled={isPending}
-            />
-            {errors.email && (
-              <p className="text-xs text-red-600">{errors.email.message}</p>
-            )}
-          </div>
+          <LokeateInput
+            label="Correo Electrónico"
+            id="email"
+            type="email"
+            placeholder="tu@correo.com"
+            disabled={isPending}
+            error={errors.email?.message}
+            {...register("email")}
+          />
 
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <Label htmlFor="password">Contraseña</Label>
+              <label
+                htmlFor="password"
+                className="block text-[11px] font-extrabold uppercase tracking-wider text-[#20231f]"
+              >
+                Contraseña
+              </label>
               <Link
                 href="/auth/reset-password"
-                className="text-xs text-indigo-600 hover:text-indigo-800 underline"
+                className="text-xs text-[#e35b44] hover:underline"
               >
                 ¿Olvidaste tu contraseña?
               </Link>
             </div>
-            <Input
+            <LokeateInput
               id="password"
               type="password"
               placeholder="••••••••"
-              {...register("password")}
               disabled={isPending}
+              error={errors.password?.message}
+              {...register("password")}
             />
-            {errors.password && (
-              <p className="text-xs text-red-600">{errors.password.message}</p>
-            )}
           </div>
 
-          <Button type="submit" className="w-full mt-2" disabled={isPending}>
-            {isPending ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Iniciando sesión...
-              </>
-            ) : (
-              "Ingresar"
-            )}
-          </Button>
+          <LokeateButton
+            type="submit"
+            variant="primary"
+            size="lg"
+            className="w-full"
+            isLoading={isPending}
+          >
+            <span>Ingresar</span>
+            <ArrowRight className="w-4 h-4" />
+          </LokeateButton>
         </form>
-      </CardContent>
-      <CardFooter className="flex justify-center border-t border-slate-100 pt-4">
-        <p className="text-sm text-slate-600">
-          ¿Aún no tienes una cuenta?{" "}
-          <Link href="/auth/register" className="font-semibold text-indigo-600 hover:text-indigo-800">
+
+        <div className="text-center pt-2 text-xs text-[#7d817c]">
+          ¿No tienes cuenta?{" "}
+          <Link
+            href="/auth/register"
+            className="font-bold text-[#e35b44] hover:underline"
+          >
             Regístrate aquí
           </Link>
-        </p>
-      </CardFooter>
-    </Card>
+        </div>
+      </LokeateCardContent>
+    </LokeateCard>
   );
 }

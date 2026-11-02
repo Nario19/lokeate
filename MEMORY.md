@@ -111,6 +111,14 @@
 - **Módulos Afectados:** `establishments`, `admin`, `DATABASE.md`
 - **Justificación:** El campo `publishing_status` (`DRAFT`, `SUBMITTED_FOR_REVIEW`, `APPROVED`, `REJECTED`, `SUSPENDED`) controla la visibilidad. Solo el Superadministrador puede transicionar a `APPROVED`, y ningún establecimiento puede activarse (`is_active = TRUE`) sin estar aprobado.
 
+### `ADR-017`: Estandarización de Sistema de Diseño `lokeate-ui` y Modo de Sesión Local Resiliente
+- **Fecha:** 2026-11-01 | **Estado:** APROBADO
+- **Módulos Afectados:** Transversal a UI (`src/components/lokeate-ui/*`), `auth`, `establishments`, `spaces`, `search`.
+- **Justificación:**
+  1. Se implementó una biblioteca modular en `src/components/lokeate-ui/` alineada con la maqueta visual editorial/Pinterest (`lokeate_mvp_pinterest.html`), otorgando máximo protagonismo a la fotografía, tipografía DM Sans/Manrope y paleta coral (`#e35b44`), bosque (`#24362d`), tinta (`#20231f`) y fondos suaves (`#f6f7f4`, `#fafaf9`).
+  2. Todas las pantallas de la plataforma (`/`, `/explorar`, `/auth/login`, `/auth/register`, `/auth/reset-password`, `/dashboard`, `/host/*`) adoptan este sistema bajo principios SOLID, garantizando desacoplamiento, consistencia y reutilización sin estilos inline duplicados.
+  3. Para resolver el error de red `fetch failed` al registrarse o iniciar sesión cuando Supabase Docker no está en ejecución localmente, `AuthService` y `createServerSupabaseClient` incorporaron un fallback transparente basado en cookies `lokeate_local_user`, permitiendo probar todos los flujos de interfaz y formularios de manera robusta sin bloquearse.
+
 ---
 
 ## 3. Decisiones Funcionales Aprobadas

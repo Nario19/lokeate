@@ -9,11 +9,16 @@ import {
   type CreatePricingPlanInput,
 } from "../schemas/space.schemas";
 import { createPricingPlanAction } from "../actions/create-pricing-plan.action";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, CheckCircle2, Loader2, Sparkles, Shield, DollarSign } from "lucide-react";
+import {
+  LokeateButton,
+  LokeateInput,
+  LokeateSelect,
+  LokeateCard,
+  LokeateCardHeader,
+  LokeateCardContent,
+  LokeateNotice,
+} from "@/components/lokeate-ui";
+import { Sparkles, DollarSign } from "lucide-react";
 
 interface CreatePricingPlanFormProps {
   spaceId: string;
@@ -75,30 +80,32 @@ export function CreatePricingPlanForm({
   };
 
   return (
-    <Card className="max-w-2xl mx-auto border-slate-200">
-      <CardHeader>
-        <div className="flex items-center gap-2 text-indigo-700">
-          <Sparkles className="w-5 h-5 text-indigo-600" />
-          <CardTitle className="text-xl font-bold text-slate-900">
+    <LokeateCard className="max-w-2xl mx-auto">
+      <LokeateCardHeader>
+        <div className="flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-[#e35b44]" />
+          <h2 className="text-xl font-black text-[#20231f]">
             Añadir Plan Tarifario Alternativo
-          </CardTitle>
+          </h2>
         </div>
-        <CardDescription>
+        <p className="text-xs text-[#7d817c] mt-1">
           Configura una modalidad de cobro (por hora, paquete, por persona o evento fijo). Un mismo espacio puede tener múltiples planes alternativos sin sumarse automáticamente.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        </p>
+      </LokeateCardHeader>
+      <LokeateCardContent>
         {serverError && (
-          <div className="mb-4 flex items-center gap-2 p-3 text-sm text-red-800 bg-red-50 border border-red-200 rounded-lg">
-            <AlertCircle className="w-5 h-5 flex-shrink-0" />
-            <span>{serverError}</span>
+          <div className="mb-4">
+            <LokeateNotice type="error">
+              <span>{serverError}</span>
+            </LokeateNotice>
           </div>
         )}
 
         {successMessage && (
-          <div className="mb-4 flex items-center gap-2 p-3 text-sm text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg">
-            <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
-            <span>{successMessage}</span>
+          <div className="mb-4">
+            <LokeateNotice type="success">
+              <span>{successMessage}</span>
+            </LokeateNotice>
           </div>
         )}
 
@@ -106,220 +113,154 @@ export function CreatePricingPlanForm({
           <input type="hidden" {...register("spaceId")} />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <Label htmlFor="planName">Nombre del Plan</Label>
-              <Input
-                id="planName"
-                placeholder="Ej. Tarifa Básica por Hora / Paquete Quinceaños"
-                {...register("planName")}
-                disabled={isPending}
-              />
-              {errors.planName && (
-                <p className="text-xs text-red-600">{errors.planName.message}</p>
-              )}
-            </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="pricingMode">Modalidad de Cobro Aprobada</Label>
-              <select
-                id="pricingMode"
-                {...register("pricingMode")}
-                disabled={isPending}
-                className="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
-              >
-                <option value="HOURLY">Por Hora (HOURLY)</option>
-                <option value="FIXED_EVENT">Por Evento / Turno Fijo (FIXED_EVENT)</option>
-                <option value="PER_PERSON">Por Persona / Invitado (PER_PERSON)</option>
-                <option value="PACKAGE">Paquete Integral (PACKAGE)</option>
-              </select>
-              {errors.pricingMode && (
-                <p className="text-xs text-red-600">{errors.pricingMode.message}</p>
-              )}
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="description">Descripción y Alcance del Plan</Label>
-            <Input
-              id="description"
-              placeholder="Ej. Incluye mobiliario básico para 80 personas y uso de cocina"
-              {...register("description")}
+            <LokeateInput
+              id="planName"
+              label="Nombre del Plan"
+              placeholder="Ej. Tarifa Básica por Hora / Paquete Quinceaños"
+              {...register("planName")}
+              error={errors.planName?.message}
               disabled={isPending}
             />
-            {errors.description && (
-              <p className="text-xs text-red-600">{errors.description.message}</p>
-            )}
+
+            <LokeateSelect
+              id="pricingMode"
+              label="Modalidad de Cobro Aprobada"
+              {...register("pricingMode")}
+              error={errors.pricingMode?.message}
+              disabled={isPending}
+            >
+              <option value="HOURLY">Por Hora (HOURLY)</option>
+              <option value="FIXED_EVENT">Por Evento / Turno Fijo (FIXED_EVENT)</option>
+              <option value="PER_PERSON">Por Persona / Invitado (PER_PERSON)</option>
+              <option value="PACKAGE">Paquete Integral (PACKAGE)</option>
+            </LokeateSelect>
           </div>
+
+          <LokeateInput
+            id="description"
+            label="Descripción y Alcance del Plan"
+            placeholder="Ej. Incluye mobiliario básico para 80 personas y uso de cocina"
+            {...register("description")}
+            error={errors.description?.message}
+            disabled={isPending}
+          />
 
           {/* Tarifas Base Diferenciadas */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <Label htmlFor="basePriceWeekday">
-                Precio Entre Semana ({selectedMode === "HOURLY" ? "S/ por hora" : "S/ base"})
-              </Label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-sm text-slate-500 font-bold">
-                  S/
-                </span>
-                <Input
-                  id="basePriceWeekday"
-                  type="number"
-                  step="0.01"
-                  className="pl-9"
-                  {...register("basePriceWeekday", { valueAsNumber: true })}
-                  disabled={isPending}
-                />
-              </div>
-              {errors.basePriceWeekday && (
-                <p className="text-xs text-red-600">{errors.basePriceWeekday.message}</p>
-              )}
-            </div>
+            <LokeateInput
+              id="basePriceWeekday"
+              type="number"
+              step="0.01"
+              label={`Precio Entre Semana (${selectedMode === "HOURLY" ? "S/ por hora" : "S/ base"})`}
+              {...register("basePriceWeekday", { valueAsNumber: true })}
+              error={errors.basePriceWeekday?.message}
+              disabled={isPending}
+            />
 
-            <div className="space-y-1.5">
-              <Label htmlFor="basePriceWeekend">
-                Precio Fin de Semana ({selectedMode === "HOURLY" ? "S/ por hora" : "S/ base"})
-              </Label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-sm text-slate-500 font-bold">
-                  S/
-                </span>
-                <Input
-                  id="basePriceWeekend"
-                  type="number"
-                  step="0.01"
-                  className="pl-9"
-                  {...register("basePriceWeekend", { valueAsNumber: true })}
-                  disabled={isPending}
-                />
-              </div>
-              {errors.basePriceWeekend && (
-                <p className="text-xs text-red-600">{errors.basePriceWeekend.message}</p>
-              )}
-            </div>
+            <LokeateInput
+              id="basePriceWeekend"
+              type="number"
+              step="0.01"
+              label={`Precio Fin de Semana (${selectedMode === "HOURLY" ? "S/ por hora" : "S/ base"})`}
+              {...register("basePriceWeekend", { valueAsNumber: true })}
+              error={errors.basePriceWeekend?.message}
+              disabled={isPending}
+            />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="space-y-1.5">
-              <Label htmlFor="minimumRentalHours">Alquiler Mínimo (Horas)</Label>
-              <Input
-                id="minimumRentalHours"
-                type="number"
-                {...register("minimumRentalHours", { valueAsNumber: true })}
-                disabled={isPending}
-              />
-              {errors.minimumRentalHours && (
-                <p className="text-xs text-red-600">{errors.minimumRentalHours.message}</p>
-              )}
-            </div>
+            <LokeateInput
+              id="minimumRentalHours"
+              type="number"
+              label="Alquiler Mínimo (Horas)"
+              {...register("minimumRentalHours", { valueAsNumber: true })}
+              error={errors.minimumRentalHours?.message}
+              disabled={isPending}
+            />
 
-            <div className="space-y-1.5">
-              <Label htmlFor="extraHourPrice">Hora Adicional (S/)</Label>
-              <Input
-                id="extraHourPrice"
-                type="number"
-                step="0.01"
-                {...register("extraHourPrice", { valueAsNumber: true })}
-                disabled={isPending}
-              />
-              {errors.extraHourPrice && (
-                <p className="text-xs text-red-600">{errors.extraHourPrice.message}</p>
-              )}
-            </div>
+            <LokeateInput
+              id="extraHourPrice"
+              type="number"
+              step="0.01"
+              label="Hora Adicional (S/)"
+              {...register("extraHourPrice", { valueAsNumber: true })}
+              error={errors.extraHourPrice?.message}
+              disabled={isPending}
+            />
 
-            <div className="space-y-1.5">
-              <Label htmlFor="cleaningFee">Tarifa de Limpieza (S/)</Label>
-              <Input
-                id="cleaningFee"
-                type="number"
-                step="0.01"
-                {...register("cleaningFee", { valueAsNumber: true })}
-                disabled={isPending}
-              />
-              {errors.cleaningFee && (
-                <p className="text-xs text-red-600">{errors.cleaningFee.message}</p>
-              )}
-            </div>
+            <LokeateInput
+              id="cleaningFee"
+              type="number"
+              step="0.01"
+              label="Tarifa de Limpieza (S/)"
+              {...register("cleaningFee", { valueAsNumber: true })}
+              error={errors.cleaningFee?.message}
+              disabled={isPending}
+            />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <Label htmlFor="securityDeposit">Depósito de Garantía (S/)</Label>
-              <Input
-                id="securityDeposit"
-                type="number"
-                step="0.01"
-                {...register("securityDeposit", { valueAsNumber: true })}
-                disabled={isPending}
-              />
-              <p className="text-[11px] text-slate-500">
-                Reembolsable en 7 días calendario tras evento sin daños observados.
-              </p>
-              {errors.securityDeposit && (
-                <p className="text-xs text-red-600">{errors.securityDeposit.message}</p>
-              )}
-            </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="requiredAdvancePercentage">Anticipo Requerido (%)</Label>
-              <Input
-                id="requiredAdvancePercentage"
-                type="number"
-                min={10}
-                max={100}
-                {...register("requiredAdvancePercentage", { valueAsNumber: true })}
-                disabled={isPending}
-              />
-              <p className="text-[11px] text-slate-500">
-                Porcentaje obligatorio para confirmar la reserva (10% a 100%).
-              </p>
-              {errors.requiredAdvancePercentage && (
-                <p className="text-xs text-red-600">{errors.requiredAdvancePercentage.message}</p>
-              )}
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="taxCondition">Condición Tributaria SUNAT (IGV 18%)</Label>
-            <select
-              id="taxCondition"
-              {...register("taxCondition")}
+            <LokeateInput
+              id="securityDeposit"
+              type="number"
+              step="0.01"
+              label="Depósito de Garantía (S/)"
+              helperText="Reembolsable en 7 días calendario tras evento sin daños."
+              {...register("securityDeposit", { valueAsNumber: true })}
+              error={errors.securityDeposit?.message}
               disabled={isPending}
-              className="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
-            >
-              <option value="TAX_EXEMPT_OR_NOT_APPLICABLE">
-                Exonerado / No aplicable (Personas naturales 1ra/2da categoría)
-              </option>
-              <option value="TAX_INCLUDED_18_IGV">
-                Precio incluye 18% IGV (Boleta/Factura emitida por anfitrión)
-              </option>
-              <option value="TAX_ADDITIONAL_18_IGV">
-                Adiciona 18% IGV si el cliente solicita factura comercial
-              </option>
-            </select>
+            />
+
+            <LokeateInput
+              id="requiredAdvancePercentage"
+              type="number"
+              min={10}
+              max={100}
+              label="Anticipo Requerido (%)"
+              helperText="Porcentaje obligatorio para confirmar reserva (10% a 100%)."
+              {...register("requiredAdvancePercentage", { valueAsNumber: true })}
+              error={errors.requiredAdvancePercentage?.message}
+              disabled={isPending}
+            />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-            <Button
+          <LokeateSelect
+            id="taxCondition"
+            label="Condición Tributaria SUNAT (IGV 18%)"
+            {...register("taxCondition")}
+            disabled={isPending}
+          >
+            <option value="TAX_EXEMPT_OR_NOT_APPLICABLE">
+              Exonerado / No aplicable (Personas naturales 1ra/2da categoría)
+            </option>
+            <option value="TAX_INCLUDED_18_IGV">
+              Precio incluye 18% IGV (Boleta/Factura emitida por anfitrión)
+            </option>
+            <option value="TAX_ADDITIONAL_18_IGV">
+              Adiciona 18% IGV si el cliente solicita factura comercial
+            </option>
+          </LokeateSelect>
+
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#e9ebe7]">
+            <LokeateButton
               type="button"
               variant="outline"
               onClick={() => router.back()}
               disabled={isPending}
             >
               Cancelar
-            </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Guardando plan...
-                </>
-              ) : (
-                "Guardar Plan Tarifario"
-              )}
-            </Button>
+            </LokeateButton>
+            <LokeateButton
+              type="submit"
+              variant="primary"
+              isLoading={isPending}
+              disabled={isPending}
+            >
+              Guardar Plan Tarifario
+            </LokeateButton>
           </div>
         </form>
-      </CardContent>
-    </Card>
+      </LokeateCardContent>
+    </LokeateCard>
   );
 }

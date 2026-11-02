@@ -1,5 +1,6 @@
 import * as React from "react";
 import { RegisterForm } from "@/modules/auth/components/register-form";
+import { AuthLayout } from "@/components/lokeate-ui";
 
 export const metadata = {
   title: "Registro de Usuario | LOKEATE",
@@ -7,5 +8,9 @@ export const metadata = {
 };
 
 export default function RegisterPage() {
-  return <RegisterForm />;
+  return (
+    <AuthLayout subtitle="Encuentra o publica espacios extraordinarios para eventos con RealPrice Transparente.">
+      <RegisterForm />
+    </AuthLayout>
+  );
 }

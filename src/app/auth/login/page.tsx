@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Suspense } from "react";
 import { LoginForm } from "@/modules/auth/components/login-form";
+import { AuthLayout } from "@/components/lokeate-ui";
 
 export const metadata = {
   title: "Iniciar Sesión | LOKEATE",
@@ -9,8 +10,10 @@ export const metadata = {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="text-center p-8 text-slate-500">Cargando formulario...</div>}>
-      <LoginForm />
-    </Suspense>
+    <AuthLayout subtitle="Accede para gestionar tus solicitudes, reservas y administrar tus locales.">
+      <Suspense fallback={<div className="text-center p-8 text-slate-500">Cargando formulario...</div>}>
+        <LoginForm />
+      </Suspense>
+    </AuthLayout>
   );
 }

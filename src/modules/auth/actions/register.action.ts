@@ -1,5 +1,6 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { registerSchema, type RegisterInput } from "../schemas/auth.schemas";
 import { AuthService } from "../services/auth.service";
@@ -26,9 +27,19 @@ export async function registerUserAction(
       };
     }
 
+    // Si opera en modo local/demo sin Supabase online, guardamos la sesión en cookies
+    if (result.isLocalDemo && result.user) {
+      const cookieStore = await cookies();
+      cookieStore.set("lokeate_local_user", JSON.stringify(result.user), {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+        sameSite: "lax",
+      });
+    }
+
     return {
       success: true,
-      message: "Registro completado con éxito. Revisa tu correo si se requiere confirmación.",
+      message: "¡Cuenta creada con éxito! Redirigiendo...",
       data: { userId: result.user.id },
     };
   } catch (err: unknown) {

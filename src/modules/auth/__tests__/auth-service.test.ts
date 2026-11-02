@@ -72,7 +72,9 @@ describe("Sprint 02: AuthService Unit Tests", () => {
 
     const result = await AuthService.signUp(mockSupabase, mockRegisterInput);
     expect(result.success).toBe(false);
-    expect(result.error).toBe("User already registered");
+    if (!result.success) {
+      expect(result.error).toBe("User already registered");
+    }
   });
 
   it("inicia sesión correctamente con correo y contraseña", async () => {

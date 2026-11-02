@@ -6,11 +6,18 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createSpaceSchema, type CreateSpaceInput } from "../schemas/space.schemas";
 import { createSpaceAction } from "../actions/create-space.action";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, CheckCircle2, Loader2, Users, Maximize2, Clock, ShieldCheck } from "lucide-react";
+import {
+  LokeateButton,
+  LokeateInput,
+  LokeateSelect,
+  LokeateTextarea,
+  LokeateCard,
+  LokeateCardHeader,
+  LokeateCardContent,
+  LokeateCardFooter,
+  LokeateNotice,
+} from "@/components/lokeate-ui";
+import { Users, Maximize2, Clock, Sparkles } from "lucide-react";
 
 interface CreateSpaceFormProps {
   establishmentId: string;
@@ -61,209 +68,165 @@ export function CreateSpaceForm({ establishmentId }: CreateSpaceFormProps) {
   };
 
   return (
-    <Card className="max-w-2xl mx-auto border-slate-200">
-      <CardHeader>
-        <CardTitle className="text-xl font-bold text-slate-900">
-          Añadir Espacio al Establecimiento
-        </CardTitle>
-        <CardDescription>
+    <LokeateCard className="max-w-2xl mx-auto">
+      <LokeateCardHeader>
+        <div className="flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-[#e35b44]" />
+          <h2 className="text-xl font-black text-[#20231f]">
+            Añadir Espacio al Establecimiento
+          </h2>
+        </div>
+        <p className="text-xs text-[#7d817c] mt-1">
           Configura un salón, terraza, jardín individual o la opción de alquiler del establecimiento completo.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        </p>
+      </LokeateCardHeader>
+      <LokeateCardContent>
         {serverError && (
-          <div className="mb-4 flex items-center gap-2 p-3 text-sm text-red-800 bg-red-50 border border-red-200 rounded-lg">
-            <AlertCircle className="w-5 h-5 flex-shrink-0" />
-            <span>{serverError}</span>
+          <div className="mb-4">
+            <LokeateNotice type="error">
+              <span>{serverError}</span>
+            </LokeateNotice>
           </div>
         )}
 
         {successMessage && (
-          <div className="mb-4 flex items-center gap-2 p-3 text-sm text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg">
-            <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
-            <span>{successMessage}</span>
+          <div className="mb-4">
+            <LokeateNotice type="success">
+              <span>{successMessage}</span>
+            </LokeateNotice>
           </div>
         )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <input type="hidden" {...register("establishmentId")} />
 
-          <div className="space-y-1.5">
-            <Label htmlFor="name">Nombre del Espacio</Label>
-            <Input
-              id="name"
-              placeholder="Ej. Salón Principal de Cristal / Jardín Pachacámac"
-              {...register("name")}
-              disabled={isPending}
-            />
-            {errors.name && (
-              <p className="text-xs text-red-600">{errors.name.message}</p>
-            )}
-          </div>
+          <LokeateInput
+            id="name"
+            label="Nombre del Espacio"
+            placeholder="Ej. Salón Principal de Cristal / Jardín Pachacámac"
+            {...register("name")}
+            error={errors.name?.message}
+            disabled={isPending}
+          />
 
-          <div className="space-y-1.5">
-            <Label htmlFor="description">Descripción del Espacio</Label>
-            <textarea
-              id="description"
-              rows={3}
-              placeholder="Detalla iluminación, ventilación, piso, salidas de emergencia y vistas..."
-              className="flex w-full rounded-lg border border-slate-300 bg-white p-3 text-sm text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
-              {...register("description")}
-              disabled={isPending}
-            />
-            {errors.description && (
-              <p className="text-xs text-red-600">{errors.description.message}</p>
-            )}
-          </div>
+          <LokeateTextarea
+            id="description"
+            label="Descripción del Espacio"
+            rows={3}
+            placeholder="Detalla iluminación, ventilación, piso, salidas de emergencia y vistas..."
+            {...register("description")}
+            error={errors.description?.message}
+            disabled={isPending}
+          />
 
           {/* Checkbox: Establecimiento Completo */}
-          <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg flex items-start gap-3">
+          <div className="p-4 bg-[#f6f7f4] border border-[#e1e4df] rounded-2xl flex items-start gap-3">
             <input
               type="checkbox"
               id="isEntireEstablishment"
               {...register("isEntireEstablishment")}
               disabled={isPending}
-              className="mt-1 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+              className="mt-1 h-4 w-4 rounded border-[#e1e4df] text-[#e35b44] focus:ring-[#e35b44]"
             />
             <div>
-              <Label htmlFor="isEntireEstablishment" className="font-semibold text-slate-900 cursor-pointer">
+              <label htmlFor="isEntireEstablishment" className="text-xs font-bold text-[#20231f] cursor-pointer block">
                 Este espacio representa el Establecimiento Completo (Alquiler Exclusivo)
-              </Label>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Al reservarse este espacio, se inhabilitará automáticamente la disponibilidad de todos los demás espacios individuales de la propiedad para evitar doble reserva (*double-booking*).
+              </label>
+              <p className="text-[11px] text-[#7d817c] mt-0.5 leading-relaxed">
+                Al reservarse este espacio, se inhabilitará automáticamente la disponibilidad de todos los demás espacios individuales de la propiedad para evitar doble reserva (<em>double-booking</em>).
               </p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="space-y-1.5">
-              <Label htmlFor="areaM2" className="flex items-center gap-1.5">
-                <Maximize2 className="w-3.5 h-3.5 text-slate-500" />
-                Área (m²)
-              </Label>
-              <Input
-                id="areaM2"
-                type="number"
-                step="any"
-                {...register("areaM2", { valueAsNumber: true })}
-                disabled={isPending}
-              />
-              {errors.areaM2 && (
-                <p className="text-xs text-red-600">{errors.areaM2.message}</p>
-              )}
-            </div>
+            <LokeateInput
+              id="areaM2"
+              type="number"
+              step="any"
+              label="Área (m²)"
+              {...register("areaM2", { valueAsNumber: true })}
+              error={errors.areaM2?.message}
+              disabled={isPending}
+            />
 
-            <div className="space-y-1.5">
-              <Label htmlFor="standingCapacity" className="flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-slate-500" />
-                Aforo de Pie
-              </Label>
-              <Input
-                id="standingCapacity"
-                type="number"
-                {...register("standingCapacity", { valueAsNumber: true })}
-                disabled={isPending}
-              />
-              {errors.standingCapacity && (
-                <p className="text-xs text-red-600">{errors.standingCapacity.message}</p>
-              )}
-            </div>
+            <LokeateInput
+              id="standingCapacity"
+              type="number"
+              label="Aforo de Pie"
+              {...register("standingCapacity", { valueAsNumber: true })}
+              error={errors.standingCapacity?.message}
+              disabled={isPending}
+            />
 
-            <div className="space-y-1.5">
-              <Label htmlFor="seatedCapacity" className="flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-slate-500" />
-                Aforo Sentado
-              </Label>
-              <Input
-                id="seatedCapacity"
-                type="number"
-                {...register("seatedCapacity", { valueAsNumber: true })}
-                disabled={isPending}
-              />
-              {errors.seatedCapacity && (
-                <p className="text-xs text-red-600">{errors.seatedCapacity.message}</p>
-              )}
-            </div>
+            <LokeateInput
+              id="seatedCapacity"
+              type="number"
+              label="Aforo Sentado"
+              {...register("seatedCapacity", { valueAsNumber: true })}
+              error={errors.seatedCapacity?.message}
+              disabled={isPending}
+            />
           </div>
 
           {/* Buffers de Montaje y Desmontaje */}
-          <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-800">
-              <Clock className="w-4 h-4 text-indigo-600" />
+          <div className="p-4 bg-[#f6f7f4] border border-[#e1e4df] rounded-2xl space-y-2">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-[#20231f]">
+              <Clock className="w-4 h-4 text-[#24362d]" />
               <span>Buffers Operativos de Protección Temporal</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="space-y-1">
-                <Label htmlFor="setupBufferMinutes" className="text-xs text-slate-700">
-                  Buffer de Montaje (Minutos previos)
-                </Label>
-                <Input
-                  id="setupBufferMinutes"
-                  type="number"
-                  {...register("setupBufferMinutes", { valueAsNumber: true })}
-                  disabled={isPending}
-                />
-                {errors.setupBufferMinutes && (
-                  <p className="text-xs text-red-600">{errors.setupBufferMinutes.message}</p>
-                )}
-              </div>
+              <LokeateInput
+                id="setupBufferMinutes"
+                type="number"
+                label="Buffer de Montaje (Minutos previos)"
+                {...register("setupBufferMinutes", { valueAsNumber: true })}
+                error={errors.setupBufferMinutes?.message}
+                disabled={isPending}
+              />
 
-              <div className="space-y-1">
-                <Label htmlFor="cleanupBufferMinutes" className="text-xs text-slate-700">
-                  Buffer de Desmontaje (Minutos posteriores)
-                </Label>
-                <Input
-                  id="cleanupBufferMinutes"
-                  type="number"
-                  {...register("cleanupBufferMinutes", { valueAsNumber: true })}
-                  disabled={isPending}
-                />
-                {errors.cleanupBufferMinutes && (
-                  <p className="text-xs text-red-600">{errors.cleanupBufferMinutes.message}</p>
-                )}
-              </div>
+              <LokeateInput
+                id="cleanupBufferMinutes"
+                type="number"
+                label="Buffer de Desmontaje (Minutos posteriores)"
+                {...register("cleanupBufferMinutes", { valueAsNumber: true })}
+                error={errors.cleanupBufferMinutes?.message}
+                disabled={isPending}
+              />
             </div>
           </div>
 
-          <div className="space-y-1.5">
-            <Label htmlFor="cancellationPolicy">Política de Cancelación Aplicable</Label>
-            <select
-              id="cancellationPolicy"
-              {...register("cancellationPolicy")}
-              disabled={isPending}
-              className="flex h-10 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
-            >
-              <option value="FLEXIBLE">Flexible (Reembolso total hasta 7 días antes)</option>
-              <option value="MODERATE">Moderada (Reembolso total hasta 14 días antes)</option>
-              <option value="STRICT">Estricta (Reembolso parcial con más de 30 días)</option>
-            </select>
-            {errors.cancellationPolicy && (
-              <p className="text-xs text-red-600">{errors.cancellationPolicy.message}</p>
-            )}
-          </div>
+          <LokeateSelect
+            id="cancellationPolicy"
+            label="Política de Cancelación Aplicable"
+            {...register("cancellationPolicy")}
+            error={errors.cancellationPolicy?.message}
+            disabled={isPending}
+          >
+            <option value="FLEXIBLE">Flexible (Reembolso total hasta 7 días antes)</option>
+            <option value="MODERATE">Moderada (Reembolso total hasta 14 días antes)</option>
+            <option value="STRICT">Estricta (Reembolso parcial con más de 30 días)</option>
+          </LokeateSelect>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-            <Button
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#e9ebe7]">
+            <LokeateButton
               type="button"
               variant="outline"
               onClick={() => router.back()}
               disabled={isPending}
             >
               Cancelar
-            </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Creando espacio...
-                </>
-              ) : (
-                "Guardar Espacio"
-              )}
-            </Button>
+            </LokeateButton>
+            <LokeateButton
+              type="submit"
+              variant="primary"
+              isLoading={isPending}
+              disabled={isPending}
+            >
+              Guardar Espacio
+            </LokeateButton>
           </div>
         </form>
-      </CardContent>
-    </Card>
+      </LokeateCardContent>
+    </LokeateCard>
   );
 }

@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { CreateSpaceForm } from "@/modules/spaces/components/create-space-form";
+import { BrandLogo } from "@/components/lokeate-ui";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata = {
@@ -40,18 +41,27 @@ export default async function NewSpacePage({
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        <Link
-          href={`/host/establishments/${establishmentId}`}
-          className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-indigo-600"
-        >
-          <ArrowLeft className="w-4 h-4 mr-1.5" />
-          Volver a {establishment.name}
-        </Link>
+    <div className="min-h-screen bg-[#f6f7f4]">
+      {/* Top Bar */}
+      <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-[#e9ebe7]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <BrandLogo size="sm" />
+            <span className="hidden sm:inline-block h-4 w-px bg-[#e9ebe7]" />
+            <Link
+              href={`/host/establishments/${establishmentId}`}
+              className="inline-flex items-center text-xs font-bold text-[#7d817c] hover:text-[#20231f] transition-colors"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 mr-1" />
+              Volver a {establishment.name}
+            </Link>
+          </div>
+        </div>
+      </header>
 
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         <CreateSpaceForm establishmentId={establishmentId} />
-      </div>
+      </main>
     </div>
   );
 }

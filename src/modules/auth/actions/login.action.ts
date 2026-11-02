@@ -1,5 +1,6 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { loginSchema, type LoginInput } from "../schemas/auth.schemas";
 import { AuthService } from "../services/auth.service";
@@ -24,6 +25,15 @@ export async function loginUserAction(
         success: false,
         error: result.error || "Credenciales incorrectas o usuario no encontrado.",
       };
+    }
+
+    if (result.isLocalDemo && result.user) {
+      const cookieStore = await cookies();
+      cookieStore.set("lokeate_local_user", JSON.stringify(result.user), {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+        sameSite: "lax",
+      });
     }
 
     return {

@@ -1,8 +1,7 @@
 import * as React from "react";
 import Link from "next/link";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { EstablishmentStatusBadge } from "./establishment-status-badge";
-import { MapPin, ShieldCheck, Clock, Building } from "lucide-react";
+import { MapPin, ShieldCheck, Clock } from "lucide-react";
 import type { Establishment } from "../types/establishment.types";
 
 interface EstablishmentCardProps {
@@ -25,10 +24,10 @@ export function EstablishmentCard({ establishment, isHostView = false }: Establi
   const typeLabel = TYPE_LABELS[establishment.establishment_type] || establishment.establishment_type;
 
   return (
-    <Card className="overflow-hidden hover:shadow-md transition-shadow flex flex-col justify-between border-slate-200">
-      <CardHeader className="p-5 pb-3">
+    <div className="bg-white rounded-3xl border border-[#e9ebe7] overflow-hidden hover:shadow-lg transition-all flex flex-col justify-between">
+      <div className="p-5 pb-3">
         <div className="flex items-start justify-between gap-2">
-          <span className="text-xs font-semibold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#24362d]/10 text-[#24362d]">
             {typeLabel}
           </span>
           {isHostView && (
@@ -38,53 +37,53 @@ export function EstablishmentCard({ establishment, isHostView = false }: Establi
             />
           )}
         </div>
-        <CardTitle className="text-lg font-bold text-slate-900 mt-2 line-clamp-1">
+        <h3 className="text-base font-black text-[#20231f] mt-2 line-clamp-1">
           {establishment.name}
-        </CardTitle>
-      </CardHeader>
+        </h3>
+      </div>
 
-      <CardContent className="p-5 pt-0 pb-4 space-y-3">
-        <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+      <div className="px-5 pb-4 space-y-3">
+        <p className="text-xs text-[#7d817c] line-clamp-2 leading-relaxed">
           {establishment.description}
         </p>
 
-        <div className="space-y-1.5 text-xs text-slate-500">
+        <div className="space-y-1.5 text-xs text-[#7d817c]">
           <div className="flex items-center gap-1.5">
-            <MapPin className="w-3.5 h-3.5 text-indigo-500 flex-shrink-0" />
+            <MapPin className="w-3.5 h-3.5 text-[#e35b44] flex-shrink-0" />
             <span>Zona referencial (~500m)</span>
           </div>
 
           {establishment.noise_curfew_time && (
             <div className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />
+              <Clock className="w-3.5 h-3.5 text-[#24362d] flex-shrink-0" />
               <span>Toque de queda sonoro: {establishment.noise_curfew_time}</span>
             </div>
           )}
         </div>
 
-        <div className="p-2 bg-slate-50 border border-slate-100 rounded text-[11px] text-slate-500 flex items-center gap-1.5">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+        <div className="p-2.5 bg-[#f6f7f4] border border-[#e9ebe7] rounded-xl text-[11px] text-[#7d817c] flex items-center gap-1.5">
+          <ShieldCheck className="w-3.5 h-3.5 text-[#24362d] flex-shrink-0" />
           <span>Dirección física resguardada por Ley N° 29733</span>
         </div>
-      </CardContent>
+      </div>
 
-      <CardFooter className="p-5 pt-0 border-t border-slate-100 flex items-center justify-between">
+      <div className="p-4 border-t border-[#e9ebe7] bg-[#fafbf9] flex items-center justify-between">
         {isHostView ? (
           <Link
             href={`/host/establishments/${establishment.id}`}
-            className="text-xs font-semibold text-indigo-600 hover:text-indigo-800"
+            className="text-xs font-bold text-[#e35b44] hover:text-[#20231f] transition-colors"
           >
             Administrar Local →
           </Link>
         ) : (
           <Link
             href={`/espacios/${establishment.slug}`}
-            className="text-xs font-semibold text-indigo-600 hover:text-indigo-800"
+            className="text-xs font-bold text-[#e35b44] hover:text-[#20231f] transition-colors"
           >
             Ver Espacios Disponibles →
           </Link>
         )}
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 }
